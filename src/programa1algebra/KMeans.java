@@ -27,13 +27,18 @@ public class KMeans {
             puntoArrayList.add(punto);
             //System.out.println("("+punto.x+","+punto.y+") "+punto.esCentro);
         }
+        return puntoArrayList;
+    }
+    public ArrayList<Punto> generarPuntosCentros(ArrayList<Punto> puntoArrayList,int k,int cantidad){
+        ArrayList<Punto> puntoCentroArrayList = new ArrayList<>();
+        Random random = new Random();
         for(int n=0; n<k;n++){
             int c = random.nextInt(cantidad);
             double x = puntoArrayList.get(c).x;
             double y = puntoArrayList.get(c).y;
             Punto punto=new Punto(x,y,true);
-            puntoArrayList.add(punto);
+            puntoCentroArrayList.add(punto);
         }
-        return puntoArrayList;
+        return puntoCentroArrayList;
     }
 }
