@@ -29,6 +29,11 @@ public class Punto {
         this.y = y;
     }
 
+    public void setCentro(boolean centro)
+    {
+        this.esCentro = centro;
+    }
+    
     public boolean isEsCentro() {
         return esCentro;
     }
