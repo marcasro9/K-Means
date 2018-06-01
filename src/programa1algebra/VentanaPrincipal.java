@@ -21,6 +21,29 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }
 
+    public void generarMatriz (int n,int k){
+        System.out.println();
+        KMeans kmeans = new KMeans();
+        ArrayList<Punto> puntoArrayList=kmeans.generarPuntos(n,k);
+        ArrayList<Punto> puntoCentrosArrayList=kmeans.generarPuntosCentros(puntoArrayList,k,n);
+        agruparPuntosEnClusters(n,k,puntoArrayList,puntoCentrosArrayList);
+        //for(int x=0;x<puntoArrayList.size();x++){
+        //    System.out.println("("+puntoArrayList.get(x).x+","+puntoArrayList.get(x).y+") "+puntoArrayList.get(x).esCentro);
+            
+        //}
+    }
+    public void pintar(){
+        
+    }
+    public void agruparPuntosEnClusters(int n,int k,ArrayList<Punto> puntoArrayList,ArrayList<Punto> puntoCentrosArrayList){
+       double matriz[][] = new double[k][n];
+       
+       for (int x=0; x < matriz.length; x++) {
+           for (int y=0; y < matriz[x].length; y++) {
+               matriz[x][y]=euclidianDistance(puntoCentrosArrayList.get(x),puntoArrayList.get(y));
+           }
+       } 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -230,12 +253,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void btnCorrerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCorrerActionPerformed
         // TODO add your handling code here:
-        KMeans kmeans = new KMeans();
-        ArrayList<Punto> puntoArrayList=kmeans.generarPuntos(10,4);
-        for(int x=0;x<14;x++){
-            System.out.println("("+puntoArrayList.get(x).x+","+puntoArrayList.get(x).y+") "+puntoArrayList.get(x).esCentro);
-            
-        }
+        int k =Integer.valueOf(textFieldK.getText());
+        int n =Integer.valueOf(textFieldN.getText());
+        generarMatriz(n,k);
     }//GEN-LAST:event_btnCorrerActionPerformed
 
     private void btnValidacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidacionActionPerformed
