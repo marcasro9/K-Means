@@ -6,6 +6,7 @@
 package programa1algebra;
 
 import java.util.ArrayList;
+import programa1algebra.Utils.ClusterHandler;
 
 /**
  *
@@ -27,6 +28,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         ArrayList<Punto> puntoArrayList=kmeans.generarPuntos(n,k);
         ArrayList<Punto> puntoCentrosArrayList=kmeans.generarPuntosCentros(puntoArrayList,k,n);
         agruparPuntosEnClusters(n,k,puntoArrayList,puntoCentrosArrayList);
+        
         //for(int x=0;x<puntoArrayList.size();x++){
         //    System.out.println("("+puntoArrayList.get(x).x+","+puntoArrayList.get(x).y+") "+puntoArrayList.get(x).esCentro);
             
@@ -37,12 +39,47 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
     public void agruparPuntosEnClusters(int n,int k,ArrayList<Punto> puntoArrayList,ArrayList<Punto> puntoCentrosArrayList){
        double matriz[][] = new double[k][n];
-       
+       ClusterHandler clusterH= new ClusterHandler();
        for (int x=0; x < matriz.length; x++) {
            for (int y=0; y < matriz[x].length; y++) {
-               matriz[x][y]=euclidianDistance(puntoCentrosArrayList.get(x),puntoArrayList.get(y));
+               matriz[x][y]=clusterH.euclideanDistance(puntoCentrosArrayList.get(x),puntoArrayList.get(y));
            }
-       } 
+       }
+       for (int x=0; x < matriz.length; x++) {
+           System.out.print("|");
+           for (int y=0; y < matriz[x].length; y++) {
+               System.out.print (matriz[x][y]);
+               if (y!=matriz[x].length-1) System.out.print("\t");
+           }
+           System.out.println("|");
+       }
+       int matrizBinaria[][] =new int[k][n];
+       for (int x=0; x < matrizBinaria.length; x++) {
+           for (int y=0; y < matrizBinaria[x].length; y++) {
+               matrizBinaria[x][y]=0;
+           }
+       }
+       for (int x=0; x < n; x++) {
+           double var=0;
+           int pos=0;
+           for (int y=0; y < k; y++) {
+               if(matriz[y][x]<var){
+                   var=matriz[y][x];
+                   pos=y;
+               }else{
+                   var=matriz[y][x];
+               }
+           }
+           matrizBinaria[pos][x]=1;
+       }
+       for (int x=0; x < matrizBinaria.length; x++) {
+           System.out.print("|");
+           for (int y=0; y < matrizBinaria[x].length; y++) {
+               System.out.print (matrizBinaria[x][y]);
+               if (y!=matrizBinaria[x].length-1) System.out.print("\t   ");
+           }
+           System.out.println("|");
+       }
     }
     /**
      * This method is called from within the constructor to initialize the form.

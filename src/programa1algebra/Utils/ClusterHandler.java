@@ -22,6 +22,8 @@ public class ClusterHandler {
     {
         double x = Math.pow( (puntoUno.getX() - puntoDos.getX()) , 2);
         double y = Math.pow( (puntoUno.getY() - puntoDos.getY()) , 2);
+        //System.out.println("Valores: " + x + " " + y);
+        //System.out.println("Resultado: " +Math.sqrt(x + y ));
         return Math.sqrt(x + y );
     }
  
