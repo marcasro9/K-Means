@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package programa1algebra;
 
 import com.sun.prism.paint.Color;
@@ -13,10 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import programa1algebra.Utils.ClusterHandler;
 
-/**
- *
- * @author rshum
- */
+
 public class VentanaPrincipal extends javax.swing.JFrame {
     private ArrayList<JPanel> jPaneles;
     private int indice;
@@ -24,7 +17,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     /**
      * Creates new form VentanaPrincipal
      */
-    public VentanaPrincipal() {
+    
+    public VentanaPrincipal() 
+    {
         initComponents();
         grafico=new Graficos();
         jPaneles = new ArrayList<>();
@@ -33,63 +28,85 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         crearJPanel(6);
     }
 
-    public void generarKMeans (int n,int k){
+    public void generarKMeans (int n, int k)
+    {
         KMeans kmeans = new KMeans();
         ArrayList<Punto> puntoArrayList=kmeans.generarPuntos(n);
         ArrayList<Punto> puntoCentrosArrayList=kmeans.generarPuntosCentros(puntoArrayList,k,n);
         pintar(0,puntoArrayList,puntoCentrosArrayList);
         agruparK(n,k,puntoArrayList,puntoCentrosArrayList,this.indice);        
     }
-    public void pintar(int n,ArrayList<Punto> puntoArrayList, ArrayList<Punto> puntoCentrosArrayList){
-        for (int x=0; x < puntoArrayList.size(); x++) {
+    
+    public void pintar(int n,ArrayList<Punto> puntoArrayList, ArrayList<Punto> puntoCentrosArrayList)
+    {
+        for (int x=0; x < puntoArrayList.size(); x++) 
+        {
             double coorX=(puntoArrayList.get(x).x+5)*27;
             double coorY=(puntoArrayList.get(x).y+5)*27;
             grafico.pintarPunto(jPaneles.get(n).getGraphics(), coorX, coorY,0);
             
         }
-        for (int y=0; y < puntoCentrosArrayList.size(); y++){
+        
+        for (int y=0; y < puntoCentrosArrayList.size(); y++)
+        {
             double coorX=(puntoCentrosArrayList.get(y).x+5)*27;
             double coorY=(puntoCentrosArrayList.get(y).y+5)*27;
             grafico.pintarPunto(jPaneles.get(n).getGraphics(), coorX, coorY,1);
         }
     }
-    public void pintarPuntos(int n,int contC,Cluster matrizBinaria,Graphics g){
-
-            for (int x=0; x<matrizBinaria.puntos.size();x++) {
+    
+    public void pintarPuntos(int n,int contC,Cluster matrizBinaria,Graphics g)
+    {
+            for (int x=0; x<matrizBinaria.puntos.size();x++) 
+            {
                 double coorX = (matrizBinaria.puntos.get(x).x + 5) * 27;
                 double coorY = (matrizBinaria.puntos.get(x).y + 5) * 27;
                 grafico.pintarPunto(g, coorX, coorY,contC+2);   
             }
     }
-    public void pintarCentros(ArrayList<Punto> puntoCentrosArrayList,Graphics g){
-        for (int x=0; x<puntoCentrosArrayList.size();x++) {
-                double coorX = (puntoCentrosArrayList.get(x).x + 5) * 27;
-                double coorY = (puntoCentrosArrayList.get(x).y + 5) * 27;
-                grafico.pintarPunto(g, coorX, coorY,1);   
-            }
+    
+    public void pintarCentros(ArrayList<Punto> puntoCentrosArrayList,Graphics g)
+    {
+        for (int x=0; x<puntoCentrosArrayList.size();x++) 
+        {
+            double coorX = (puntoCentrosArrayList.get(x).x + 5) * 27;
+            double coorY = (puntoCentrosArrayList.get(x).y + 5) * 27;
+            grafico.pintarPunto(g, coorX, coorY,1);   
+        }
     }
-    public void agruparK(int n,int k,ArrayList<Punto> puntoArrayList,ArrayList<Punto> puntoCentrosArrayList,int indice){
-        if(this.indice<7){
+    
+    public void agruparK(int n,int k,ArrayList<Punto> puntoArrayList,ArrayList<Punto> puntoCentrosArrayList,int indice)
+    {
+        if(this.indice < 7) // if (!condicionDeParada)
+        {
             System.out.println("Entro");
             ArrayList<Punto> newPuntoCentrosArrayList=new ArrayList();
-            int matriz[][]=calcularMatrizEuclidean(n,k,puntoArrayList,puntoCentrosArrayList);
-            for(int x=0;x<puntoCentrosArrayList.size();x++){
+            int matriz[][] = calcularMatrizEuclidean(n , k , puntoArrayList , puntoCentrosArrayList);
+            
+            for(int i = 0 ; i < puntoCentrosArrayList.size() ; i++)
+            {
                 System.out.println("Entro a los puntoCentros");
-                Cluster cluster =new Cluster(puntoCentrosArrayList.get(x),agruparPuntosEnClusters(n,k,x,puntoArrayList,matriz));
-                Graphics g=jPaneles.get(indice).getGraphics();
-                pintarPuntos(indice,x,cluster,g);
+                Cluster cluster = new Cluster(puntoCentrosArrayList.get(i) , agruparPuntosEnClusters(n , k , i , puntoArrayList , matriz) );
+                Graphics g = jPaneles.get(indice).getGraphics();
+                pintarPuntos(indice,i,cluster,g);
                 pintarCentros(puntoCentrosArrayList,g);
                 cluster.calcularNuevoCentro();
                 newPuntoCentrosArrayList.add(cluster.centro);
             }
-            agruparK(n,k,puntoArrayList,newPuntoCentrosArrayList,this.indice++);
+            
+            agruparK(n , k , puntoArrayList,newPuntoCentrosArrayList , this.indice++);
         }
-        else{
+        
+        else
+        {
             System.out.println("Ya termino");
         }
     }
-    public void crearJPanel(int cont){
-        for(int x=0; x<cont;x++){
+    
+    public void crearJPanel(int cont)
+    {
+        for(int x=0; x<cont;x++)
+        {
             JPanel panel = new JPanel();
             //panel.setBackground(java.awt.Color.yellow);
             Border line = BorderFactory.createLineBorder(java.awt.Color.BLACK, 2);
@@ -99,60 +116,92 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             jPrincipal.updateUI();
         }
     }
-    public int[][] calcularMatrizEuclidean(int n,int k,ArrayList<Punto> puntoArrayList,ArrayList<Punto> puntoCentrosArrayList){
+    
+    public int[][] calcularMatrizEuclidean(int n , int k , ArrayList<Punto> puntoArrayList , ArrayList<Punto> puntoCentrosArrayList){
         double matriz[][] = new double[k][n];
         ClusterHandler clusterH= new ClusterHandler();
-        for (int x=0; x < matriz.length; x++) {
-           for (int y=0; y < matriz[x].length; y++) {
-               matriz[x][y]=clusterH.euclideanDistance(puntoCentrosArrayList.get(x),puntoArrayList.get(y));
+        
+        for (int i = 0; i < matriz.length; i++) 
+        {
+           for (int j = 0; j < matriz[i].length; j++) 
+           {
+               matriz[i][j]=clusterH.euclideanDistance(puntoCentrosArrayList.get(i),puntoArrayList.get(j));
            }
         }
+        
         int matrizBinaria[][] = new int[k][n];
-        for (int x=0; x < matrizBinaria.length; x++) {
-            for (int y=0; y < matrizBinaria[x].length; y++) {
+        
+        for (int x = 0; x < matrizBinaria.length; x++) 
+        {
+            for (int y = 0; y < matrizBinaria[x].length; y++)
+            {
                 matrizBinaria[x][y]=0;
             }
         }
-        for (int x=0; x < n; x++) {
-            double var=0;
-            int pos=0;
-            for (int y=0; y < k; y++) {
-                if(matriz[y][x]>var){
-                    var=matriz[y][x];
-                    pos=y;
-                }else{
-                    var=matriz[y][x];
+        
+        //Iteramos sobre J porque vamos a iterar sobre columnas 
+        //Usamos min = 0 porque no deberían haber valores negativos.
+        for (int j = 0 ; j < n; j++)
+        {
+            //Numero en extremo grande para garantizar que en la primera iteracion, el primer valor quede como minimo.
+            double min = 10000000;
+            int posicion = 0;
+            
+            for (int i = 0 ; i < k; i++)
+            {
+                double valor_Actual = matriz[i][j];
+                
+                if (valor_Actual < min)
+                {
+                    min = valor_Actual;
+                    posicion = i;
                 }
             }
-            matrizBinaria[pos][x]=1;
+            
+            matrizBinaria[posicion][j] = 1;            
         }
-//        for (int x=0; x < matrizBinaria.length; x++) {
+        
+//        for (int i=0; i < matrizBinaria.length; i++) {
 //            System.out.print("|");
-//            for (int y=0; y < matrizBinaria[x].length; y++) {
-//                System.out.print (matrizBinaria[x][y]);
-//                if (y!=matrizBinaria[x].length-1) System.out.print("\t   ");
+//            for (int y=0; y < matrizBinaria[i].length; y++) {
+//                System.out.print (matrizBinaria[i][y]);
+//                if (y!=matrizBinaria[i].length-1) System.out.print("\t   ");
 //            }
 //            System.out.println("|");
 //        }
         return matrizBinaria;
     }
-    public ArrayList<Punto> agruparPuntosEnClusters(int n,int k,int c,ArrayList<Punto> puntoArrayList,int[][]matrizBinaria){
-       ArrayList<Punto> puntosEnCluster=new ArrayList();
-       for (int x=0; x < n; x++) {
-           if(matrizBinaria[c][x]==1){
-               puntosEnCluster.add(puntoArrayList.get(x));
+    
+    public ArrayList<Punto> agruparPuntosEnClusters(int n, int k, int c , ArrayList<Punto> puntoArrayList , int[][]matrizBinaria)
+    {
+       ArrayList<Punto> puntosEnCluster = new ArrayList();
+       
+       for (int j = 0; j < n; j++) 
+       {
+           if(matrizBinaria[c][j] == 1)
+           {
+               puntosEnCluster.add(puntoArrayList.get(j));
            }
         }
-//       for (int x=0; x < matrizBinaria.length; x++) {
+       
+//       for (int i=0; i < matrizBinaria.length; i++) {
 //           System.out.print("|");
-//           for (int y=0; y < matrizBinaria[x].length; y++) {
-//               System.out.print (matrizBinaria[x][y]);
-//               if (y!=matrizBinaria[x].length-1) System.out.print("\t   ");
+//           for (int y=0; y < matrizBinaria[i].length; y++) {
+//               System.out.print (matrizBinaria[i][y]);
+//               if (y!=matrizBinaria[i].length-1) System.out.print("\t   ");
 //           }
 //           System.out.println("|");
 //       }
        return puntosEnCluster;
     }
+    
+    
+    
+    
+    
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -205,56 +254,59 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(jLabel1)
-                .addGap(10, 10, 10)
-                .addComponent(textFieldK, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(textFieldN, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addComponent(btnCorrer)
-                .addGap(456, 456, 456)
-                .addComponent(btnValidacion)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addGap(10, 10, 10)
-                .addComponent(textFieldKRecomendado, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel1)
+                        .addGap(10, 10, 10)
+                        .addComponent(textFieldK, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(textFieldN, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCorrer)
+                        .addGap(423, 423, 423)
+                        .addComponent(btnValidacion)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(textFieldKRecomendado, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                        .addGap(6, 6, 6))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jLabel1))
+                        .addGap(11, 11, 11)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(jLabel1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(jLabel2))
+                            .addComponent(btnCorrer)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(textFieldKRecomendado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel3)
+                                        .addComponent(btnValidacion))))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
+                        .addGap(12, 12, 12)
                         .addComponent(textFieldK, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jLabel2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(textFieldN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnCorrer)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(btnValidacion)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(textFieldKRecomendado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 626, Short.MAX_VALUE)
+                        .addGap(12, 12, 12)
+                        .addComponent(textFieldN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(22, 22, 22)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

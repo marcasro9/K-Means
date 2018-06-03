@@ -18,31 +18,45 @@ public class Graficos {
     void pintarPunto(Graphics g,double xD,double yD,int color){
         int x=(int) xD;
         int y=(int) yD;
-        if (color==0){
+        
+        if (color==0)
+        {
             g.setColor(Color.BLACK);
             g.fillOval(x, y, 7, 7);
         }
-        if (color==1){
+        
+        if (color==1)
+        {
             g.setColor(Color.RED);
             g.fillOval(x, y, 7, 7);
         }
-        if (color==2){
+        
+        if (color==2)
+        {
             g.setColor(Color.GREEN);
             g.fillOval(x, y, 7, 7);
         }
-        if (color==3){
+        
+        if (color==3)
+        {
             g.setColor(Color.MAGENTA);
             g.fillOval(x, y, 7, 7);
         }
-        if (color==4){
+        
+        if (color==4)
+        {
             g.setColor(Color.BLUE);
             g.fillOval(x, y, 7, 7);
         }
-        if (color==5){
+        
+        if (color==5)
+        {
             g.setColor(Color.ORANGE);
             g.fillOval(x, y, 7, 7);
         }
-        if (color==6){
+        
+        if (color==6)
+        {
             g.setColor(Color.PINK);
             g.fillOval(x, y, 7, 7);
         }

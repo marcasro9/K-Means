@@ -38,4 +38,9 @@ public class Punto {
         return esCentro;
     }
     
+    public boolean esIgual(Punto punto)
+    {
+        return (this.x == punto.getX() && this.y == punto.getY());
+    }
+    
 }
