@@ -25,78 +25,68 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jPaneles = new ArrayList<>();
         this.indice=1;
         setLocationRelativeTo(null);
-        crearJPanel(6);
+        crearJPanel(9);
     }
 
     public void generarKMeans (int n, int k)
     {
         KMeans kmeans = new KMeans();
         ArrayList<Punto> puntoArrayList=kmeans.generarPuntos(n);
-        ArrayList<Punto> puntoCentrosArrayList=kmeans.generarPuntosCentros(puntoArrayList,k,n);
-        pintar(0,puntoArrayList,puntoCentrosArrayList);
-        agruparK(n,k,puntoArrayList,puntoCentrosArrayList,this.indice);        
+        kmeans.generarPuntosCentros(puntoArrayList,k,n);
+        pintar(puntoArrayList,0);
+        Graphics g = jPaneles.get(0).getGraphics();
+        int matrizVieja[][] = new int[k][n];
+        int matrizNueva[][] = calcularMatrizEuclidean(n , k ,puntoArrayList);
+//        for (int x = 0; x < matrizBinaria.length; x++) 
+//        {
+//            for (int y = 0; y < matrizBinaria[x].length; y++)
+//            {
+//                matrizBinaria[x][y]=0;
+//            }
+//        }
+        agruparK(n,k,puntoArrayList,this.indice,matrizVieja,matrizNueva);        
     }
     
-    public void pintar(int n,ArrayList<Punto> puntoArrayList, ArrayList<Punto> puntoCentrosArrayList)
+    public void pintar(ArrayList<Punto> puntoArrayList,int jPanel)
     {
         for (int x=0; x < puntoArrayList.size(); x++) 
         {
-            double coorX=(puntoArrayList.get(x).x+5)*27;
-            double coorY=(puntoArrayList.get(x).y+5)*27;
-            grafico.pintarPunto(jPaneles.get(n).getGraphics(), coorX, coorY,0);
-            
-        }
-        
-        for (int y=0; y < puntoCentrosArrayList.size(); y++)
-        {
-            double coorX=(puntoCentrosArrayList.get(y).x+5)*27;
-            double coorY=(puntoCentrosArrayList.get(y).y+5)*27;
-            grafico.pintarPunto(jPaneles.get(n).getGraphics(), coorX, coorY,1);
-        }
-    }
-    
-    public void pintarPuntos(int n,int contC,Cluster matrizBinaria,Graphics g)
-    {
-            for (int x=0; x<matrizBinaria.puntos.size();x++) 
-            {
-                double coorX = (matrizBinaria.puntos.get(x).x + 5) * 27;
-                double coorY = (matrizBinaria.puntos.get(x).y + 5) * 27;
-                grafico.pintarPunto(g, coorX, coorY,contC+2);   
+            if(puntoArrayList.get(x).esCentro==false){
+                System.out.println("Centro es false");
+                double coorX=(puntoArrayList.get(x).x+5)*27;
+                double coorY=(puntoArrayList.get(x).y+5)*27;
+                grafico.pintarPunto(jPaneles.get(jPanel).getGraphics(), coorX, coorY,0);
             }
-    }
-    
-    public void pintarCentros(ArrayList<Punto> puntoCentrosArrayList,Graphics g)
-    {
-        for (int x=0; x<puntoCentrosArrayList.size();x++) 
-        {
-            double coorX = (puntoCentrosArrayList.get(x).x + 5) * 27;
-            double coorY = (puntoCentrosArrayList.get(x).y + 5) * 27;
-            grafico.pintarPunto(g, coorX, coorY,1);   
-        }
-    }
-    
-    public void agruparK(int n,int k,ArrayList<Punto> puntoArrayList,ArrayList<Punto> puntoCentrosArrayList,int indice)
-    {
-        if(this.indice < 7) // if (!condicionDeParada)
-        {
-            System.out.println("Entro");
-            ArrayList<Punto> newPuntoCentrosArrayList=new ArrayList();
-            int matriz[][] = calcularMatrizEuclidean(n , k , puntoArrayList , puntoCentrosArrayList);
-            
-            for(int i = 0 ; i < puntoCentrosArrayList.size() ; i++)
-            {
-                System.out.println("Entro a los puntoCentros");
-                Cluster cluster = new Cluster(puntoCentrosArrayList.get(i) , agruparPuntosEnClusters(n , k , i , puntoArrayList , matriz) );
-                Graphics g = jPaneles.get(indice).getGraphics();
-                pintarPuntos(indice,i,cluster,g);
-                pintarCentros(puntoCentrosArrayList,g);
-                cluster.calcularNuevoCentro();
-                newPuntoCentrosArrayList.add(cluster.centro);
+            else{
+                double coorX=(puntoArrayList.get(x).x+5)*27;
+                double coorY=(puntoArrayList.get(x).y+5)*27;
+                grafico.pintarPunto(jPaneles.get(jPanel).getGraphics(), coorX, coorY,jPanel);
             }
-            
-            agruparK(n , k , puntoArrayList,newPuntoCentrosArrayList , this.indice++);
         }
-        
+    }
+    public void agruparK(int n,int k,ArrayList<Punto> puntoArrayList,int indice,int[][] matrizVieja,int[][] matrizNueva)
+    {
+        int cont=0;
+        if(sonIguales(matrizVieja,matrizNueva)==false) // if (!condicionDeParada)
+        {
+            if(indice<6){
+                System.out.println("Entro porque si hay cambios");
+                ArrayList<Punto> newPuntoCentrosArrayList=new ArrayList();
+                for(int i = 0 ; i < puntoArrayList.size() ; i++){
+                    if(puntoArrayList.get(i).esCentro==true){
+                        System.out.println("Entro a los puntoCentros");
+                        Cluster cluster = new Cluster(puntoArrayList.get(i) , agruparPuntosEnClusters(n , k , cont , puntoArrayList , matrizNueva) );
+                        Graphics g = jPaneles.get(indice).getGraphics();
+                        pintar(puntoArrayList,indice);
+                        cluster.calcularNuevoCentro();
+                        newPuntoCentrosArrayList.add(cluster.centro);
+                        cont++;
+                    }
+                }
+                int matriz[][] = calcularMatrizEuclidean(n , k , puntoArrayList);
+                agruparK(n , k , puntoArrayList, this.indice++,matrizNueva,matriz);
+                }
+            }   
         else
         {
             System.out.println("Ya termino");
@@ -116,19 +106,43 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             jPrincipal.updateUI();
         }
     }
-    
-    public int[][] calcularMatrizEuclidean(int n , int k , ArrayList<Punto> puntoArrayList , ArrayList<Punto> puntoCentrosArrayList){
+    public boolean sonIguales(int[][] matrizAnterior,int[][] matrizNueva){
+        boolean iguales=true;
+        if(matrizAnterior.length == matrizNueva.length){
+            if(matrizAnterior[0].length == matrizNueva[0].length){
+                for(int i = 0; i < matrizAnterior.length && iguales;i++){
+                    for(int j = 0; j < matrizAnterior[0].length && iguales;j++){
+                        if(matrizAnterior[i][j] != matrizNueva[i][j]){
+                            iguales = false;
+                            return iguales;
+                        }
+                    }
+                }
+            }
+            else{
+                iguales = false;
+            }
+        }
+        else{
+            iguales = false;
+        }
+        return iguales;
+    } 
+    public int[][] calcularMatrizEuclidean(int n , int k , ArrayList<Punto> puntoArrayList){
         double matriz[][] = new double[k][n];
         ClusterHandler clusterH= new ClusterHandler();
         
-        for (int i = 0; i < matriz.length; i++) 
-        {
-           for (int j = 0; j < matriz[i].length; j++) 
-           {
-               matriz[i][j]=clusterH.euclideanDistance(puntoCentrosArrayList.get(i),puntoArrayList.get(j));
-           }
+        for(int y = 0 ; y < puntoArrayList.size() ; y++){
+            if(puntoArrayList.get(y).esCentro==true){
+                for (int i = 0; i < matriz.length; i++) 
+                {
+                    for (int j = 0; j < matriz[i].length; j++) 
+                    {
+                        matriz[i][j]=clusterH.euclideanDistance(puntoArrayList.get(y),puntoArrayList.get(j));
+                    }
+                }
+            }
         }
-        
         int matrizBinaria[][] = new int[k][n];
         
         for (int x = 0; x < matrizBinaria.length; x++) 
@@ -175,7 +189,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     public ArrayList<Punto> agruparPuntosEnClusters(int n, int k, int c , ArrayList<Punto> puntoArrayList , int[][]matrizBinaria)
     {
        ArrayList<Punto> puntosEnCluster = new ArrayList();
-       
+       System.out.println("Tamaño de la lista de puntos"+puntoArrayList.size());
        for (int j = 0; j < n; j++) 
        {
            if(matrizBinaria[c][j] == 1)
@@ -294,11 +308,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             .addComponent(btnCorrer)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(1, 1, 1)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(textFieldKRecomendado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel3)
-                                        .addComponent(btnValidacion))))))
+                                        .addComponent(btnValidacion))
+                                    .addComponent(textFieldKRecomendado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(textFieldK, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
