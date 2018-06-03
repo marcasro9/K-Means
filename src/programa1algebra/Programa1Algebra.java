@@ -9,6 +9,7 @@ public class Programa1Algebra {
         VentanaPrincipal nuevaVentana= new VentanaPrincipal();
         nuevaVentana.setVisible(true);
         System.out.println("Hola Mundo");
+        
     }
     
 }
