@@ -2,10 +2,11 @@
 package programa1algebra;
 
 import java.util.ArrayList;
+import programa1algebra.Utils.ClusterHandler;
 
 public class Cluster {
-    Punto centro;
-    ArrayList<Punto> puntos;
+    public Punto centro;
+    public ArrayList<Punto> puntos;
 
     public Cluster()
     {
@@ -43,4 +44,19 @@ public class Cluster {
     {
         return puntos.size();
     }
+    
+    public double calcular_s_i()
+    {
+        ClusterHandler ch = new ClusterHandler();
+        double distanciasTotales = 0;
+        for (Punto punto_Iterable : puntos)
+        {
+            distanciasTotales += ch.euclideanDistance(this.centro , punto_Iterable);
+        }
+    
+        double s_i = distanciasTotales / cardinalidad();
+        
+        return s_i;
+    }
+
 }
