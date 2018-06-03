@@ -17,27 +17,43 @@ public class KMeans {
     public KMeans() {
     }
     
-    public ArrayList<Punto> generarPuntos(int cantidad,int k){
+    public ArrayList<Punto> generarPuntos(int cantidad){
         ArrayList<Punto> puntoArrayList = new ArrayList<>();
         Random random = new Random();
-        for(int n=0; n<cantidad;n++){
+        ArrayList<Punto> numerox= new ArrayList<>();
+        int cont=0;
+        while(cont<cantidad){
             double x = random.nextInt(11)-5;
             double y = random.nextInt(11)-5;
             Punto punto = new Punto(x,y,false);
-            puntoArrayList.add(punto);
-            //System.out.println("("+punto.x+","+punto.y+") "+punto.esCentro);
+            if(numerox.contains(punto)==false){
+                numerox.add(punto);
+                puntoArrayList.add(punto);
+                cont++;
+            }
+            else{
+                System.out.println(":v");
+            }
+            System.out.println("("+punto.x+","+punto.y+") "+punto.esCentro);
         }
         return puntoArrayList;
     }
     public ArrayList<Punto> generarPuntosCentros(ArrayList<Punto> puntoArrayList,int k,int cantidad){
         ArrayList<Punto> puntoCentroArrayList = new ArrayList<>();
+        ArrayList<Integer> numero = new ArrayList<Integer>();
         Random random = new Random();
-        for(int n=0; n<k;n++){
+        int n=0;
+        while(n<k){
             int c = random.nextInt(cantidad);
-            double x = puntoArrayList.get(c).x;
-            double y = puntoArrayList.get(c).y;
-            Punto punto=new Punto(x,y,true);
-            puntoCentroArrayList.add(punto);
+            if(numero.contains(c)==false){
+                numero.add(c);
+                System.out.println(c);
+                double x = puntoArrayList.get(c).x;
+                double y = puntoArrayList.get(c).y;
+                Punto punto=new Punto(x,y,true);
+                puntoCentroArrayList.add(punto);   
+                n++;
+            }
         }
         return puntoCentroArrayList;
     }

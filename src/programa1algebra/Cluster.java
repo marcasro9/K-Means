@@ -36,7 +36,6 @@ public class Cluster {
         nuevoY = nuevoY / puntos.size();
         
         Punto nuevoCentro = new Punto(nuevoX, nuevoY , true);
-        this.centro.setCentro(false);
         this.centro = nuevoCentro;
     }
 }
