@@ -55,15 +55,15 @@ public class KMeans {
         return false;
     }
     
-    public ArrayList<Punto> generarPuntosCentros(ArrayList<Punto> puntoArrayList , int k , int cantidad){
-        ArrayList<Punto> puntoCentroArrayList = new ArrayList<>();
+
+    public void generarPuntosCentros(ArrayList<Punto> puntoArrayList , int k , int cantidad){
         ArrayList<Integer> numero = new ArrayList<Integer>();
         Random random = new Random();
         int n = 0;
         
         while(n < k)
         {
-            int c = random.nextInt(cantidad);
+            int c = random.nextInt(cantidad-1);
             
             if(numero.contains(c) == false)
             {
@@ -71,12 +71,9 @@ public class KMeans {
                 System.out.println(c);
                 
                 Punto punto_Actual = puntoArrayList.get(c);
-                punto_Actual.setCentro(true);
-                puntoCentroArrayList.add(punto_Actual);   
-                
+                punto_Actual.setCentro(true); 
                 n++;
             }
         }
-        return puntoCentroArrayList;
     }
 }
