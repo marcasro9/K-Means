@@ -31,8 +31,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     public void generarKMeans (int n, int k)
     {
         KMeans kmeans = new KMeans();
-        ArrayList<Punto> puntoArrayList=kmeans.generarPuntos(n);
-        ArrayList<Punto> puntoCentrosArrayList=kmeans.generarPuntosCentros(puntoArrayList,k,n);
+        ArrayList<Punto> puntoArrayList = kmeans.generarPuntos(n);
+        ArrayList<Punto> puntoCentrosArrayList = kmeans.generarPuntosCentros(puntoArrayList , k , n);
         pintar(0,puntoArrayList,puntoCentrosArrayList);
         agruparK(n,k,puntoArrayList,puntoCentrosArrayList,this.indice);        
     }
