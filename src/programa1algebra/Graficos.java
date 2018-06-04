@@ -24,6 +24,7 @@ public class Graficos {
         colores.add(Color.BLUE);
         colores.add(Color.ORANGE);
         colores.add(Color.PINK);
+        colores.add(Color.YELLOW);
         g.setColor(colores.get(color));
         g.fillOval(x, y, 7, 7);
     }

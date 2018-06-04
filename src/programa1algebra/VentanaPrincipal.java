@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import programa1algebra.Utils.ClusterHandler;
@@ -26,6 +27,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     public VentanaPrincipal() 
     {
         initComponents();
+        this.setResizable(false);
         grafico=new Graficos();
         jPaneles = new ArrayList<>();
         this.indice=1;
@@ -174,7 +176,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 }
                              
                 int matrizNueva[][] = calcularMatrizEuclidean(n , k , puntoArrayList);
-                agruparKPara_K_Recomendado(n , k , puntoArrayList , indiceLocal++ , matriz , matrizNueva , clustersIteracion);
+                return agruparKPara_K_Recomendado(n , k , puntoArrayList , indiceLocal++ , matriz , matrizNueva , clustersIteracion);
             }
             
         }
@@ -185,6 +187,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             System.out.println("Tamano clustersFinales: " + clustersEntrada.size());
             return clustersEntrada; 
         }
+        
         return clustersEntrada;
     }
     
@@ -295,13 +298,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         return min;
     }
     
-    public double calcular_K_recomendado()
+    public int getIndiceDeK(double[] lista , double valor)
+    {
+        for (int i = 0 ; i < lista.length ; i++)
+        {
+            if (valor == lista[i])
+                return i;
+        }
+        System.out.println("Lugar:");
+        return -1;
+    }
+    public int calcular_K_recomendado()
     {
         double[] lista_R_k = new double[4];
-        double k_Recomendado = 0;
+        int k_Recomendado = 0;
         
+        int index = 0;
         KMeans km = new KMeans();
-        for (int k = 2 ; k < 3 ; k++)
+        for (int k = 2 ; k < 6 ; k++)
         {
             System.out.println(" ----- o ------");
             System.out.println("CALCULANDO K RECOMENDADO");
@@ -330,16 +344,23 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             
             //System.out.println("Largo Clusters: " + clustersPara_K_Recomendado.size());
             
-            for(int i = 0 ; i < 4 ; i++)
-            {
-                lista_R_k[i] = ch.calculate_R_k_For_K(k , puntosParaEste_K);
-            }
+            lista_R_k[index] = ch.calculate_R_k_For_K(k , puntosParaEste_K);
+            index++;
    
             System.out.println(" ----- o ------");
             System.out.println("FINAL DE ITERACION CON K: " + k);
         }
         
-        k_Recomendado = getMinFromList(lista_R_k);
+        System.out.println("ELEMENTOS DE LISTA.");
+        for (int i = 0 ; i < lista_R_k.length ; i ++)
+        {
+            System.out.println("Elemento: " + i + "= " + lista_R_k[i]);
+        }
+        
+        double menorValor = getMinFromList(lista_R_k);
+        int indiceDeMenor = getIndiceDeK(lista_R_k, menorValor);
+        
+        k_Recomendado = indiceDeMenor + 2;
         return k_Recomendado;
     }
     
@@ -464,14 +485,18 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         int k =Integer.valueOf(textFieldK.getText());
         int n =Integer.valueOf(textFieldN.getText());
-        generarKMeans(n,k);
+        if (k<6){
+            generarKMeans(n,k);
+        }else{
+            JOptionPane.showMessageDialog(this, "Que vacilón, el valor K debe de estar entre 2 y 5.");
+        }
     }//GEN-LAST:event_btnCorrerActionPerformed
 
     private void btnValidacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidacionActionPerformed
         // TODO add your handling code here:
-        double k_Recomendado = calcular_K_recomendado();
-        String cadena = String.valueOf(k_Recomendado);
-        textFieldKRecomendado.setText(cadena);
+        int k_Recomendado = calcular_K_recomendado();
+        String recomendado = Integer.toString(k_Recomendado);
+        textFieldKRecomendado.setText(recomendado);
     }//GEN-LAST:event_btnValidacionActionPerformed
 
 
