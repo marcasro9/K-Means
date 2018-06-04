@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import programa1algebra.Utils.ClusterHandler;
@@ -311,6 +312,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         double[] lista_R_k = new double[4];
         int k_Recomendado = 0;
         
+        int index = 0;
         KMeans km = new KMeans();
         for (int k = 2 ; k < 6 ; k++)
         {
@@ -341,17 +343,22 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             
             //System.out.println("Largo Clusters: " + clustersPara_K_Recomendado.size());
             
-            for(int i = 0 ; i < 4 ; i++)
-            {
-                lista_R_k[i] = ch.calculate_R_k_For_K(k , puntosParaEste_K);
-            }
+            lista_R_k[index] = ch.calculate_R_k_For_K(k , puntosParaEste_K);
+            index++;
    
             System.out.println(" ----- o ------");
             System.out.println("FINAL DE ITERACION CON K: " + k);
         }
         
+        System.out.println("ELEMENTOS DE LISTA.");
+        for (int i = 0 ; i < lista_R_k.length ; i ++)
+        {
+            System.out.println("Elemento: " + i + "= " + lista_R_k[i]);
+        }
+        
         double menorValor = getMinFromList(lista_R_k);
         int indiceDeMenor = getIndiceDeK(lista_R_k, menorValor);
+        
         k_Recomendado = indiceDeMenor + 2;
         return k_Recomendado;
     }
@@ -477,7 +484,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         int k =Integer.valueOf(textFieldK.getText());
         int n =Integer.valueOf(textFieldN.getText());
-        generarKMeans(n,k);
+        if (k<6){
+            generarKMeans(n,k);
+        }else{
+            JOptionPane.showMessageDialog(this, "Que vacilón, el valor K debe de estar entre 2 y 5.");
+        }
     }//GEN-LAST:event_btnCorrerActionPerformed
 
     private void btnValidacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidacionActionPerformed
