@@ -174,7 +174,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 }
                              
                 int matrizNueva[][] = calcularMatrizEuclidean(n , k , puntoArrayList);
-                agruparKPara_K_Recomendado(n , k , puntoArrayList , indiceLocal++ , matriz , matrizNueva , clustersIteracion);
+                return agruparKPara_K_Recomendado(n , k , puntoArrayList , indiceLocal++ , matriz , matrizNueva , clustersIteracion);
             }
             
         }
@@ -185,6 +185,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             System.out.println("Tamano clustersFinales: " + clustersEntrada.size());
             return clustersEntrada; 
         }
+        
         return clustersEntrada;
     }
     
@@ -295,13 +296,23 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         return min;
     }
     
-    public double calcular_K_recomendado()
+    public int getIndiceDeK(double[] lista , double valor)
+    {
+        for (int i = 0 ; i < lista.length ; i++)
+        {
+            if (valor == lista[i])
+                return i;
+        }
+        System.out.println("Lugar:");
+        return -1;
+    }
+    public int calcular_K_recomendado()
     {
         double[] lista_R_k = new double[4];
-        double k_Recomendado = 0;
+        int k_Recomendado = 0;
         
         KMeans km = new KMeans();
-        for (int k = 2 ; k < 3 ; k++)
+        for (int k = 2 ; k < 6 ; k++)
         {
             System.out.println(" ----- o ------");
             System.out.println("CALCULANDO K RECOMENDADO");
@@ -339,7 +350,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             System.out.println("FINAL DE ITERACION CON K: " + k);
         }
         
-        k_Recomendado = getMinFromList(lista_R_k);
+        double menorValor = getMinFromList(lista_R_k);
+        int indiceDeMenor = getIndiceDeK(lista_R_k, menorValor);
+        k_Recomendado = indiceDeMenor + 2;
         return k_Recomendado;
     }
     
@@ -469,9 +482,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void btnValidacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidacionActionPerformed
         // TODO add your handling code here:
-        double k_Recomendado = calcular_K_recomendado();
-        String cadena = String.valueOf(k_Recomendado);
-        textFieldKRecomendado.setText(cadena);
+        int k_Recomendado = calcular_K_recomendado();
+        String recomendado = Integer.toString(k_Recomendado);
+        textFieldKRecomendado.setText(recomendado);
     }//GEN-LAST:event_btnValidacionActionPerformed
 
 
