@@ -5,60 +5,25 @@
  */
 package programa1algebra;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 /**
  *
  * @author Armando
  */
 public class Graficos {
-    void pintarPunto(Graphics g,double xD,double yD,int color){
-        int x=(int) xD;
-        int y=(int) yD;
-        
-        if (color==0)
-        {
-            g.setColor(Color.BLACK);
-            g.fillOval(x, y, 7, 7);
-        }
-        
-        if (color==1)
-        {
-            g.setColor(Color.RED);
-            g.fillOval(x, y, 7, 7);
-        }
-        
-        if (color==2)
-        {
-            g.setColor(Color.GREEN);
-            g.fillOval(x, y, 7, 7);
-        }
-        
-        if (color==3)
-        {
-            g.setColor(Color.MAGENTA);
-            g.fillOval(x, y, 7, 7);
-        }
-        
-        if (color==4)
-        {
-            g.setColor(Color.BLUE);
-            g.fillOval(x, y, 7, 7);
-        }
-        
-        if (color==5)
-        {
-            g.setColor(Color.ORANGE);
-            g.fillOval(x, y, 7, 7);
-        }
-        
-        if (color==6)
-        {
-            g.setColor(Color.PINK);
-            g.fillOval(x, y, 7, 7);
-        }
+    void pintarPunto(Graphics g,int x,int y,int color){
+        ArrayList<Color> colores = new ArrayList<>();
+        colores.add(Color.BLACK);
+        colores.add(Color.RED);
+        colores.add(Color.GREEN);
+        colores.add(Color.MAGENTA);
+        colores.add(Color.BLUE);
+        colores.add(Color.ORANGE);
+        colores.add(Color.PINK);
+        g.setColor(colores.get(color));
+        g.fillOval(x, y, 7, 7);
     }
 }
