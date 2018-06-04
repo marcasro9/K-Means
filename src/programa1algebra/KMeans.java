@@ -35,7 +35,7 @@ public class KMeans {
             }
             else
             {
-                System.out.println("Se hizo un punto repetido.");
+                //System.out.println("Se hizo un punto repetido.");
                 //System.out.println("("+punto.x+","+punto.y+") "+punto.esCentro);
             }
             
@@ -44,13 +44,13 @@ public class KMeans {
         return puntoArrayList;
     }
     
-    public void generarPuntosCentros(ArrayList<Punto> puntoArrayList , int k , int cantidad){
+    public void generarPuntosCentros(ArrayList<Punto> puntoArrayList , int k ){
         ArrayList<Integer> numero = new ArrayList<Integer>();
         Random random = new Random();
         int n = 0;
         while(n < k)
         {
-            int c = random.nextInt(cantidad);
+            int c = random.nextInt(puntoArrayList.size());
             if(numero.contains(c) == false)
             {
                 numero.add(c);
