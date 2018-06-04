@@ -57,6 +57,8 @@ public class Cluster {
     
         double s_i = distanciasTotales / cardinalidad();
         
+        System.out.println("s_i: " + s_i);
+        
         return s_i;
     }
 
