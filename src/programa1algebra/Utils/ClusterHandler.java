@@ -26,7 +26,7 @@ public class ClusterHandler {
         //System.out.println("Resultado: " +Math.sqrt(x + y ));
         return Math.sqrt(x + y );
     }
- 
+    
     //Fuera de Cluster
     //Only works for negative numbers
     public double getMaxFromList(double[] lista)
