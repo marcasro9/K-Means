@@ -14,7 +14,8 @@ import java.util.ArrayList;
  * @author Armando
  */
 public class Graficos {
-    void pintarPunto(Graphics g,int x,int y,int color){
+    void pintarPunto(Graphics g , int x, int y , int color){
+        
         ArrayList<Color> colores = new ArrayList<>();
         colores.add(Color.BLACK);
         colores.add(Color.RED);
