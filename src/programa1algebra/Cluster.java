@@ -38,6 +38,7 @@ public class Cluster {
         
         Punto nuevoCentro = new Punto(nuevoX, nuevoY , true);
         this.centro = nuevoCentro;
+        
     }
     
     public double cardinalidad()
