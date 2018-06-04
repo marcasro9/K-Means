@@ -16,6 +16,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private ArrayList<JPanel> jPaneles;
     private int indice;
     private Graficos grafico;
+    private ArrayList<Punto> puntosFijosPara_K_Recomendado;
+    private ArrayList<Cluster> clustersFijosPara_K_Recomendado;
+
     /**
      * Creates new form VentanaPrincipal
      */
@@ -27,6 +30,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jPaneles = new ArrayList<>();
         this.indice=1;
         setLocationRelativeTo(null);
+        puntosFijosPara_K_Recomendado = new ArrayList<>();
+        clustersFijosPara_K_Recomendado = new ArrayList<>();
         //this.setExtendedState(MAXIMIZED_BOTH);
         crearJPanel(9);
     }
@@ -34,12 +39,35 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     public void generarKMeans (int n, int k)
     {
         KMeans kmeans = new KMeans();
-        ArrayList<Punto> puntoArrayList=kmeans.generarPuntos(n);
+        ArrayList<Punto> puntoArrayList = kmeans.generarPuntos(n);
+        
+        for (int i = 0 ; i < puntoArrayList.size() ; i++)
+        {
+            puntosFijosPara_K_Recomendado.add(puntoArrayList.get(i));
+        }     
+                
         kmeans.generarPuntosCentros(puntoArrayList,k,n);
+        
         pintar(puntoArrayList,0,0);
         int matrizVieja[][] = new int[k][n];
         int matrizNueva[][] = calcularMatrizEuclidean(n , k ,puntoArrayList);
         agruparK(n,k,puntoArrayList,this.indice,matrizVieja,matrizNueva);        
+    }
+    
+    //Esto hace que se generan los clusters
+    public void generarKMeansPara_K_Recomendado(ArrayList<Punto> datosFijos , int k)
+    {
+        System.out.println("Entro a Generar con datos: " + datosFijos.size());
+        ArrayList<Cluster> inicial = new ArrayList<>();
+        
+        int n = datosFijos.size();
+        
+        KMeans kmeans = new KMeans();
+        kmeans.generarPuntosCentros(datosFijos, k, datosFijos.size());
+        
+        int matrizVieja[][] = new int[k][n];
+        int matrizNueva[][] = calcularMatrizEuclidean(n , k , datosFijos);
+        agruparKPara_K_Recomendado(n , k , datosFijos , this.indice , matrizVieja, matrizNueva , inicial ); 
     }
     
     public void pintar(ArrayList<Punto> puntoArrayList,int jPanel,int color){
@@ -59,7 +87,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         }
     }
-    public void pintarCluster(Cluster cluster,int jPanel,int color){
+    
+    public void pintarCluster(Cluster cluster,int jPanel,int color)
+    {
         System.out.println("Cantidad de puntos del cluster "+cluster.puntos.size());
         for(int i=0;i<cluster.puntos.size();i++){
             int coordX=(int)((cluster.puntos.get(i).x+7)*20);
@@ -71,12 +101,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         grafico.pintarPunto(jPaneles.get(jPanel).getGraphics(), coordX, coordY,1);
         
     }
+    
     public void agruparK(int n,int k,ArrayList<Punto> puntoArrayList,int indice,int[][] matrizVieja,int[][] matriz)
     {
-        int contCluster=0;
-        int colorIndice=2;
+        int contCluster = 0;
+        int colorIndice = 2;
         System.out.println(sonIguales(matrizVieja,matriz));
-        if(sonIguales(matrizVieja,matriz)==false) // if (!condicionDeParada)
+        if(sonIguales(matrizVieja,matriz) == false) // if (!condicionDeParada)
         {
             System.out.println("Entro porque si hay cambios");
             if(indice<7){
@@ -85,6 +116,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     if(puntoArrayList.get(i).esCentro==true){
                         //System.out.println("Entro a los puntoCentros");
                         Cluster cluster = new Cluster(puntoArrayList.get(i) , agruparPuntosEnClusters(n , k , contCluster , puntoArrayList , matriz) );
+                        
+                        //clustersFijosParaKRecomendado.add(cluster);
+                        
                         cluster.calcularNuevoCentro();
                         Punto nuevoPunto=cluster.centro;
                         puntoArrayList.set(i, nuevoPunto);
@@ -103,6 +137,50 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }
     
+    //Esto me va a dar los clusters
+    public void agruparKPara_K_Recomendado(int n,int k,ArrayList<Punto> puntoArrayList,int indice,int[][] matrizVieja,int[][] matriz , ArrayList<Cluster> clustersEntrada)
+    {
+        ArrayList<Cluster> clustersFinales = clustersEntrada;
+        ArrayList<Cluster> clustersIteracion = new ArrayList<>();
+        
+        int contCluster = 0;
+        //int colorIndice = 2;
+        System.out.println(sonIguales(matrizVieja,matriz));
+        if(sonIguales(matrizVieja,matriz) == false) // if (!condicionDeParada)
+        {
+            System.out.println("Entro porque si hay cambios");
+            if(indice<7)
+            {
+                //System.out.println("Entro porque si hay cambios");
+                for(int i = 0 ; i < puntoArrayList.size() ; i++)
+                {
+                    if(puntoArrayList.get(i).esCentro==true)
+                    {
+                        //System.out.println("Entro a los puntoCentros");
+                        Cluster cluster = new Cluster(puntoArrayList.get(i) , agruparPuntosEnClusters(n , k , contCluster , puntoArrayList , matriz) );
+                        
+                        clustersIteracion.add(cluster);
+                        
+                        cluster.calcularNuevoCentro();
+                        Punto nuevoPunto=cluster.centro;
+                        puntoArrayList.set(i, nuevoPunto);
+                        contCluster++;
+ 
+                    }
+                }
+                
+                int matrizNueva[][] = calcularMatrizEuclidean(n , k , puntoArrayList);
+                agruparKPara_K_Recomendado(n , k , puntoArrayList , this.indice++ , matriz , matrizNueva , clustersIteracion);
+            }
+        }
+        
+        else
+        {
+            clustersFijosPara_K_Recomendado = clustersFinales;
+            System.out.println("Ya termino");
+        }
+    }
+        
     public void crearJPanel(int cont)
     {
         for(int x=0; x<cont;x++)
@@ -126,6 +204,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
         return true;
     } 
+    
     public int[][] calcularMatrizEuclidean(int n , int k , ArrayList<Punto> puntoArrayList){
         double matriz[][] = new double[k][n];
         ClusterHandler clusterH= new ClusterHandler();
@@ -137,6 +216,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             {
                 for (int j = 0 ; j < puntoArrayList.size() ; j++)
                 {
+                    System.out.println("Indice de j:" + j);
                     Punto punto_Iterable = puntoArrayList.get(j);
                     matriz[index][j] = clusterH.euclideanDistance(punto_Actual, punto_Iterable);
                     
@@ -193,6 +273,44 @@ public class VentanaPrincipal extends javax.swing.JFrame {
        return puntosEnCluster;
     }
     
+    public double getMinFromList(double[] lista)
+    {
+        double min = 100000000;
+        for (int i = 0; i < lista.length ; i++)
+        {
+            if (lista[i] < min)
+            {
+                min = lista[i];
+            }
+        }
+        
+        return min;
+    }
+    
+    public double calcular_K_recomendado()
+    {
+        System.out.println(" ----- o ------");
+        System.out.println("CALCULANDO K RECOMENDADO");
+  
+        double[] lista_R_k = new double[4];
+        double k_Recomendado = 0;
+        ClusterHandler ch = new ClusterHandler(clustersFijosPara_K_Recomendado);
+        
+        for (int k = 2 ; k < 5 ; k++)
+        {
+            //Esto me da los clusters y puntos
+            generarKMeansPara_K_Recomendado(puntosFijosPara_K_Recomendado, k);
+            System.out.println("Largo Clusters: " + clustersFijosPara_K_Recomendado.size());
+            for(int i = 0 ; i < 4 ; i++)
+            {
+                lista_R_k[i] = ch.calculate_R_k_For_K(k , puntosFijosPara_K_Recomendado);
+            }
+            
+        }
+        
+        k_Recomendado = getMinFromList(lista_R_k);
+        return k_Recomendado;
+    }
     
     
     
@@ -320,6 +438,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void btnValidacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidacionActionPerformed
         // TODO add your handling code here:
+        double k_Recomendado = calcular_K_recomendado();
+        String cadena = String.valueOf(k_Recomendado);
+        textFieldKRecomendado.setText(cadena);
     }//GEN-LAST:event_btnValidacionActionPerformed
 
 

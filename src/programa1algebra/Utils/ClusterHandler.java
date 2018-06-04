@@ -42,34 +42,37 @@ public class ClusterHandler {
         return max;
     }
 
-        //Esto va fuera de Cluster
-        public double calculate_R_i_For_Cluster(Cluster cluster , int clusterIndex)
+    //Esto va fuera de Cluster
+    public double calculate_R_i_For_Cluster(Cluster cluster , int clusterIndex)
+    {
+        System.out.println("ENTRO EN R_i");
+        double[] listaR_i_de_Cluster = new double [clusters.size()- 1];
+
+        for (Cluster cluster_Iterable : clusters)
         {
-            double[] listaR_i_de_Cluster = new double [clusters.size()- 1];
+            if (cluster.equals(cluster_Iterable))
+                System.out.println("Somos iguales");
 
-            for (Cluster cluster_Iterable : clusters)
+            else
             {
-                if (cluster.equals(cluster_Iterable))
-                    System.out.println("Somos iguales");
-
-                else
-                {
-                    double s_i = cluster.calcular_s_i();
-                    double s_j = cluster_Iterable.calcular_s_i();
-                    double d_ij = euclideanDistance(cluster.centro , cluster_Iterable.centro);
-                    listaR_i_de_Cluster[clusterIndex] = (s_i + s_j) / d_ij;
-                }
-
+                System.out.println("No somos iguales");
+                double s_i = cluster.calcular_s_i();
+                double s_j = cluster_Iterable.calcular_s_i();
+                double d_ij = euclideanDistance(cluster.centro , cluster_Iterable.centro);
+                listaR_i_de_Cluster[clusterIndex] = (s_i + s_j) / d_ij;
             }
 
-            return getMaxFromList(listaR_i_de_Cluster);
+        }
+        
+        System.out.println("R_i para cluster: " + clusterIndex + "= " + getMaxFromList(listaR_i_de_Cluster));
+        return getMaxFromList(listaR_i_de_Cluster);
     }
 
-    public double calculate_R_k_For_K(int k , ArrayList<Punto> puntos , ArrayList<Punto> centros)
+    public double calculate_R_k_For_K(int k , ArrayList<Punto> puntos)
     {
         double[] r_i_List = new double[k];
         //ArrayList<Cluster> clusters = new hacerClusters(centros , puntos); 
-
+        
         for (Cluster cluster_Actual : clusters)
         {
             int index = 0;
@@ -83,6 +86,7 @@ public class ClusterHandler {
         for (int j = 0 ; j < r_i_List.length ; j++)
         {
             r_k += r_i_List[j];
+            System.out.println("R_k at iteración: " + j + "= " + r_k);
         }
 
         r_k = r_k / k;
